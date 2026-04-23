@@ -55,6 +55,12 @@ jobs:
             fi
           done
 
+      - name: Prepare landing page
+        run: |
+          TIMESTAMP=$(date -u +'%Y-%m-%d %H:%M UTC')
+          sed -i "s/<!--TIMESTAMP-->/Last updated: $TIMESTAMP/" index.html
+          cp index.html _output/index.html
+
       - name: Commit to gh-pages
         run: |
           git config --global user.name 'github-actions[bot]'
@@ -70,8 +76,14 @@ jobs:
             git rm -rf .
           fi
 
-          rm -rf megabasterd
-          mv /tmp/proxy-output/megabasterd megabasterd
+          rm -rf all megabasterd index.html
+          if [ -d "/tmp/proxy-output/all" ]; then
+            mv /tmp/proxy-output/all all
+          fi
+          if [ -d "/tmp/proxy-output/megabasterd" ]; then
+            mv /tmp/proxy-output/megabasterd megabasterd
+          fi
+          mv /tmp/proxy-output/index.html index.html
 
           git add -A
           if git diff --cached --quiet; then
