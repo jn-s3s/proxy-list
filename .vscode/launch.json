@@ -16,7 +16,7 @@
             "envFile": ".env",
             "args": [
                 "all",
-                "-F", "_output/all/all.txt"
+                "-F", "all/all.txt"
             ]
         },
         {
@@ -28,7 +28,7 @@
             "envFile": ".env",
             "args": [
                 "all",
-                "-F", "_output/all/http.txt",
+                "-F", "all/http.txt",
                 "--http-only"
             ]
         },
@@ -41,7 +41,7 @@
             "envFile": ".env",
             "args": [
                 "all",
-                "-F", "_output/all/socks4.txt",
+                "-F", "all/socks4.txt",
                 "--socks4-only"
             ]
         },
@@ -54,7 +54,7 @@
             "envFile": ".env",
             "args": [
                 "all",
-                "-F", "_output/all/socks5.txt",
+                "-F", "all/socks5.txt",
                 "--socks5-only"
             ]
         },
@@ -71,7 +71,7 @@
             "envFile": ".env",
             "args": [
                 "httpbin.org/get",
-                "-F", "_output/test/all_tested.txt",
+                "-F", "test/all_tested.txt",
                 "-L", "10"
             ]
         },
@@ -84,7 +84,7 @@
             "envFile": ".env",
             "args": [
                 "httpbin.org/get",
-                "-F", "_output/test/http_tested.txt",
+                "-F", "test/http_tested.txt",
                 "--http-only",
                 "-L", "10"
             ]
@@ -98,7 +98,7 @@
             "envFile": ".env",
             "args": [
                 "httpbin.org/get",
-                "-F", "_output/test/socks5_tested.txt",
+                "-F", "test/socks5_tested.txt",
                 "--socks5-only",
                 "-L", "10"
             ]
@@ -112,7 +112,7 @@
             "envFile": ".env",
             "args": [
                 "https://mega.nz/favicon.ico",
-                "-F", "_output/test/mega_tested.txt",
+                "-F", "test/mega_tested.txt",
                 "-P", "SOCKS4=*",
                 "-P", "SOCKS5=*",
                 "-L", "20"
@@ -131,7 +131,7 @@
             "envFile": ".env",
             "args": [
                 "httpbin.org/get",
-                "-F", "_output/test/with_headers.txt",
+                "-F", "test/with_headers.txt",
                 "-H", "User-Agent: ProxyTester/1.0",
                 "-H", "Accept: application/json",
                 "-L", "5"
@@ -146,7 +146,7 @@
             "envFile": ".env",
             "args": [
                 "all",
-                "-F", "_output/megabasterd/formatted-only.txt",
+                "-F", "megabasterd/formatted-only.txt",
                 "-P", "SOCKS4=*",
                 "-P", "SOCKS5=*"
             ]
@@ -160,7 +160,7 @@
             "envFile": ".env",
             "args": [
                 "all",
-                "-F", "_output/test/custom_prefixes.txt",
+                "-F", "test/custom_prefixes.txt",
                 "-P", "HTTP=px-",
                 "-P", "SOCKS5=ss-"
             ]
@@ -183,7 +183,7 @@
             },
             "args": [
                 "all",
-                "-F", "_output/test/should_fail.txt"
+                "-F", "test/should_fail.txt"
             ]
         },
         {
@@ -195,7 +195,7 @@
             "envFile": ".env",
             "args": [
                 "all",
-                "-F", "_output/test/should_fail.txt",
+                "-F", "test/should_fail.txt",
                 "-H", "BadHeaderNoColon"
             ]
         },
