@@ -390,7 +390,7 @@
         .donut-chart circle {
             fill: none;
             stroke-width: 24;
-            transition: stroke-dashoffset 1.5s ease-out;
+            transition: stroke-dasharray 1.2s ease-out, transform 1.2s ease-out;
         }
 
         .donut-center {
@@ -817,11 +817,17 @@
             </div>
             <div class="chart-body">
                 <div class="donut-chart">
-                    <svg viewBox="0 0 200 200">
+                    <svg viewBox="0 0 200 200" id="donut-svg">
                         <circle cx="100" cy="100" r="76" stroke="rgba(88, 166, 255, 0.1)" stroke-dasharray="477" stroke-dashoffset="0"/>
-                        <circle id="arc-http" cx="100" cy="100" r="76" stroke="var(--accent)" stroke-dasharray="477" stroke-dashoffset="477" stroke-linecap="round"/>
-                        <circle id="arc-socks4" cx="100" cy="100" r="76" stroke="var(--purple)" stroke-dasharray="477" stroke-dashoffset="477" stroke-linecap="round"/>
-                        <circle id="arc-socks5" cx="100" cy="100" r="76" stroke="var(--cyan)" stroke-dasharray="477" stroke-dashoffset="477" stroke-linecap="round"/>
+                        <g id="g-arc-http" transform="rotate(0, 100, 100)">
+                            <circle cx="100" cy="100" r="76" stroke="var(--accent)" stroke-dasharray="0 477" stroke-linecap="round"/>
+                        </g>
+                        <g id="g-arc-socks4" transform="rotate(0, 100, 100)">
+                            <circle cx="100" cy="100" r="76" stroke="var(--purple)" stroke-dasharray="0 477" stroke-linecap="round"/>
+                        </g>
+                        <g id="g-arc-socks5" transform="rotate(0, 100, 100)">
+                            <circle cx="100" cy="100" r="76" stroke="var(--cyan)" stroke-dasharray="0 477" stroke-linecap="round"/>
+                        </g>
                     </svg>
                     <div class="donut-center">
                         <div class="total" id="chart-total">—</div>
@@ -1000,12 +1006,15 @@
             requestAnimationFrame(update);
         }
 
-        function setDonutArc(circle, value, total, cumulativeValue) {
+        function setDonutArc(groupId, value, total, cumulativeValue) {
+            const group = document.getElementById(groupId);
+            if (!group) return;
+            const circle = group.querySelector('circle');
             const circumference = 2 * Math.PI * 76;
             const segmentLength = Math.max(0.1, (value / total) * circumference - 2);
-            const prevLength = (cumulativeValue / total) * circumference;
+            const rotation = (cumulativeValue / total) * 360;
             circle.style.strokeDasharray = `${segmentLength} ${circumference}`;
-            circle.style.strokeDashoffset = -prevLength;
+            group.setAttribute('transform', `rotate(${rotation}, 100, 100)`);
         }
 
         async function loadData() {
@@ -1041,9 +1050,9 @@
             animateValue(document.getElementById('legend-socks5'), 0, data.socks5);
 
             setTimeout(() => {
-                setDonutArc(document.getElementById('arc-http'), data.http, total, 0);
-                setDonutArc(document.getElementById('arc-socks4'), data.socks4, total, data.http / total * 477);
-                setDonutArc(document.getElementById('arc-socks5'), data.socks5, total, (data.http + data.socks4) / total * 477);
+                setDonutArc('g-arc-http', data.http, total, 0);
+                setDonutArc('g-arc-socks4', data.socks4, total, data.http);
+                setDonutArc('g-arc-socks5', data.socks5, total, data.http + data.socks4);
 
                 document.getElementById('bar-http').style.width = total > 0 ? (data.http / total * 100) + '%' : '0%';
                 document.getElementById('bar-socks4').style.width = total > 0 ? (data.socks4 / total * 100) + '%' : '0%';
