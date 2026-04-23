@@ -1,0 +1,84 @@
+name: Update proxy list - all
+
+on:
+  schedule:
+    - cron: '0 */2 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: proxy-commit
+  cancel-in-progress: false
+
+jobs:
+  update-all:
+    runs-on: ubuntu-latest
+    environment: production
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip wheel
+          pip install -r requirements.txt
+
+      - name: Generate proxy lists
+        env:
+          HTTP_URLS: ${{ secrets.HTTP_URLS }}
+          SOCKS4_URLS: ${{ secrets.SOCKS4_URLS }}
+          SOCKS5_URLS: ${{ secrets.SOCKS5_URLS }}
+          MAX_WORKERS: ${{ vars.MAX_WORKERS }}
+          FETCH_PROXY_TIMEOUT: ${{ vars.FETCH_PROXY_TIMEOUT }}
+          PROXY_CHECK_TIMEOUT: ${{ vars.PROXY_CHECK_TIMEOUT }}
+          PROXY_CHECK_RETRIES: ${{ vars.PROXY_CHECK_RETRIES }}
+        run: |
+          mkdir -p _output/all
+          python main.py -F '_output/all/all.txt'
+          python main.py -F '_output/all/http.txt' --http-only
+          python main.py -F '_output/all/socks4.txt' --socks4-only
+          python main.py -F '_output/all/socks5.txt' --socks5-only
+
+      - name: Verify output files
+        run: |
+          for f in _output/all/all.txt _output/all/http.txt _output/all/socks4.txt _output/all/socks5.txt; do
+            if [ ! -s "$f" ]; then
+              echo "ERROR: $f is empty or missing"
+              exit 1
+            fi
+          done
+
+      - name: Commit to gh-pages
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+          mv _output /tmp/proxy-output
+
+          if git ls-remote --heads origin gh-pages | grep -q gh-pages; then
+            git fetch origin gh-pages
+            git checkout gh-pages
+          else
+            git checkout --orphan gh-pages
+            git rm -rf .
+          fi
+
+          rm -rf all
+          mv /tmp/proxy-output/all all
+
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m 'chore: update proxy list'
+            git push origin gh-pages
+          fi
