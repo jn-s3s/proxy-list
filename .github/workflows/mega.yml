@@ -79,7 +79,7 @@ jobs:
             git checkout --orphan gh-pages
           fi
 
-          rm -rf all megabasterd index.html
+          rm -rf megabasterd index.html
           if [ -d "/tmp/proxy-output/all" ]; then
             mv /tmp/proxy-output/all all
           fi
