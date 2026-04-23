@@ -1,5 +1,7 @@
 # Proxy List Fetcher
 
+> Automatically fetch, test, and publish fresh HTTP/SOCKS4/SOCKS5 proxy lists. Updated every 2 hours via GitHub Actions. Raw lists served via GitHub Pages.
+
 A Python CLI tool that fetches proxy lists from multiple sources, optionally tests their availability and latency, and writes the results to a file.
 
 ## Features
@@ -35,7 +37,7 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
-pip instal dotenv
+pip instal python-dotenv
 ```
 
 ## Usage
