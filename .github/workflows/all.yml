@@ -70,12 +70,15 @@ jobs:
 
           mv _output /tmp/proxy-output
 
+          # Clean working tree so checkout doesn't complain about overwritten files
+          git reset --hard
+          git clean -fd
+
           if git ls-remote --heads origin gh-pages | grep -q gh-pages; then
             git fetch origin gh-pages
             git checkout gh-pages
           else
             git checkout --orphan gh-pages
-            git rm -rf .
           fi
 
           rm -rf all megabasterd index.html
