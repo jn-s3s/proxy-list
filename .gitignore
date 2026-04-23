@@ -1,0 +1,11 @@
+.env
+/__pycache__
+/.venv/
+/.vscode/*
+!/.vscode/launch.json
+*.pyc
+
+# Generated proxy lists — these are produced by CI and committed to the gh-pages branch.
+/all/
+/megabasterd/
+/_output

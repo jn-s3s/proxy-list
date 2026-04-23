@@ -1,0 +1,215 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.0.1",
+    "configurations": [
+        // ============================================================
+        // FETCH ONLY — no proxy testing
+        // ============================================================
+        {
+            "name": "1. All (fetch only)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "main.py",
+            "console": "integratedTerminal",
+            "envFile": ".env",
+            "args": [
+                "all",
+                "-F", "_output/all/all.txt"
+            ]
+        },
+        {
+            "name": "2. HTTP only (fetch)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "main.py",
+            "console": "integratedTerminal",
+            "envFile": ".env",
+            "args": [
+                "all",
+                "-F", "_output/all/http.txt",
+                "--http-only"
+            ]
+        },
+        {
+            "name": "3. SOCKS4 only (fetch)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "main.py",
+            "console": "integratedTerminal",
+            "envFile": ".env",
+            "args": [
+                "all",
+                "-F", "_output/all/socks4.txt",
+                "--socks4-only"
+            ]
+        },
+        {
+            "name": "4. SOCKS5 only (fetch)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "main.py",
+            "console": "integratedTerminal",
+            "envFile": ".env",
+            "args": [
+                "all",
+                "-F", "_output/all/socks5.txt",
+                "--socks5-only"
+            ]
+        },
+
+        // ============================================================
+        // FETCH + TEST — latency scoring against a target URL
+        // ============================================================
+        {
+            "name": "5. All + test (httpbin, limit 10)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "main.py",
+            "console": "integratedTerminal",
+            "envFile": ".env",
+            "args": [
+                "httpbin.org/get",
+                "-F", "_output/test/all_tested.txt",
+                "-L", "10"
+            ]
+        },
+        {
+            "name": "6. HTTP + test (httpbin, limit 10)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "main.py",
+            "console": "integratedTerminal",
+            "envFile": ".env",
+            "args": [
+                "httpbin.org/get",
+                "-F", "_output/test/http_tested.txt",
+                "--http-only",
+                "-L", "10"
+            ]
+        },
+        {
+            "name": "7. SOCKS5 + test (httpbin, limit 10)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "main.py",
+            "console": "integratedTerminal",
+            "envFile": ".env",
+            "args": [
+                "httpbin.org/get",
+                "-F", "_output/test/socks5_tested.txt",
+                "--socks5-only",
+                "-L", "10"
+            ]
+        },
+        {
+            "name": "8. Mega.nz test (megabasterd all)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "main.py",
+            "console": "integratedTerminal",
+            "envFile": ".env",
+            "args": [
+                "https://mega.nz/favicon.ico",
+                "-F", "_output/test/mega_tested.txt",
+                "-P", "SOCKS4=*",
+                "-P", "SOCKS5=*",
+                "-L", "20"
+            ]
+        },
+
+        // ============================================================
+        // CUSTOM FEATURES — headers, prefixes, protocols
+        // ============================================================
+        {
+            "name": "9. With custom headers",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "main.py",
+            "console": "integratedTerminal",
+            "envFile": ".env",
+            "args": [
+                "httpbin.org/get",
+                "-F", "_output/test/with_headers.txt",
+                "-H", "User-Agent: ProxyTester/1.0",
+                "-H", "Accept: application/json",
+                "-L", "5"
+            ]
+        },
+        {
+            "name": "10. Megabasterd format (no test)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "main.py",
+            "console": "integratedTerminal",
+            "envFile": ".env",
+            "args": [
+                "all",
+                "-F", "_output/megabasterd/formatted-only.txt",
+                "-P", "SOCKS4=*",
+                "-P", "SOCKS5=*"
+            ]
+        },
+        {
+            "name": "11. Custom prefixes",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "main.py",
+            "console": "integratedTerminal",
+            "envFile": ".env",
+            "args": [
+                "all",
+                "-F", "_output/test/custom_prefixes.txt",
+                "-P", "HTTP=px-",
+                "-P", "SOCKS5=ss-"
+            ]
+        },
+
+        // ============================================================
+        // ERROR CASES — verify failure handling
+        // ============================================================
+        {
+            "name": "12. Empty sources (should error)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "main.py",
+            "console": "integratedTerminal",
+            "envFile": ".env",
+            "env": {
+                "HTTP_URLS": "",
+                "SOCKS4_URLS": "",
+                "SOCKS5_URLS": ""
+            },
+            "args": [
+                "all",
+                "-F", "_output/test/should_fail.txt"
+            ]
+        },
+        {
+            "name": "13. Invalid header format (should error)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "main.py",
+            "console": "integratedTerminal",
+            "envFile": ".env",
+            "args": [
+                "all",
+                "-F", "_output/test/should_fail.txt",
+                "-H", "BadHeaderNoColon"
+            ]
+        },
+        {
+            "name": "14. Read-only output dir (should error)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "main.py",
+            "console": "integratedTerminal",
+            "envFile": ".env",
+            "args": [
+                "all",
+                "-F", "C:/Windows/System32/proxies.txt"
+            ]
+        }
+    ]
+}
