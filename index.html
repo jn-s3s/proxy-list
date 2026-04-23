@@ -1000,12 +1000,12 @@
             requestAnimationFrame(update);
         }
 
-        function setDonutArc(circle, value, total, offset) {
+        function setDonutArc(circle, value, total, cumulativeValue) {
             const circumference = 2 * Math.PI * 76;
-            const dashArray = circumference;
-            const dashOffset = circumference - (value / total) * circumference;
-            circle.style.strokeDasharray = dashArray;
-            circle.style.strokeDashoffset = dashOffset;
+            const segmentLength = Math.max(0.1, (value / total) * circumference - 2);
+            const prevLength = (cumulativeValue / total) * circumference;
+            circle.style.strokeDasharray = `${segmentLength} ${circumference}`;
+            circle.style.strokeDashoffset = -prevLength;
         }
 
         async function loadData() {
@@ -1018,7 +1018,7 @@
                 megaFmt: await fetchCount('megabasterd/formatted-only.txt')
             };
 
-            const total = data.http + data.socks4 + data.socks5;
+            const total = data.all;
 
             // Update timestamp
             const tsEl = document.querySelector('#last-updated');
