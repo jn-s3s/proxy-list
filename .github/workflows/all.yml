@@ -13,7 +13,7 @@ jobs:
   update-all:
     runs-on: ubuntu-latest
     environment: production
-    timeout-minutes: 10
+    timeout-minutes: 20
     permissions:
       contents: write
     steps:
