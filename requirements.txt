@@ -1,4 +1,3 @@
-requests
 requests[socks]
 click
 tqdm
