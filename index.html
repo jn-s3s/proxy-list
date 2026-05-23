@@ -583,6 +583,12 @@
     <script>
         const baseUrl = window.location.origin + window.location.pathname.replace(/\/$/, '');
 
+        /**
+         * Fetches a proxy text file and counts non-empty lines.
+         *
+         * @param {string} path - Relative path to the proxy file.
+         * @returns {Promise<number>} The number of non-empty lines, or 0 on failure.
+         */
         async function fetchCount(path) {
             try {
                 const res = await fetch(path);
@@ -594,6 +600,15 @@
             }
         }
 
+        /**
+         * Animates a DOM element's text content from a start value to an end value.
+         * Uses eased (quartic ease-out) interpolation.
+         *
+         * @param {HTMLElement} element - The element to update.
+         * @param {number} start - The starting value.
+         * @param {number} end - The ending value.
+         * @param {number} [duration=1200] - Duration in milliseconds.
+         */
         function animateValue(element, start, end, duration = 1200) {
             const startTime = performance.now();
             function update(currentTime) {
@@ -607,6 +622,15 @@
             requestAnimationFrame(update);
         }
 
+        /**
+         * Sets the visible arc segment for a donut chart group.
+         * Rotates the group to align the arc at the correct angular offset.
+         *
+         * @param {string} groupId - The id of the SVG <g> element for the arc.
+         * @param {number} value - The numeric value for this arc segment.
+         * @param {number} total - The total sum of all segments.
+         * @param {number} cumulativeValue - The sum of all preceding segments (for rotation offset).
+         */
         function setDonutArc(groupId, value, total, cumulativeValue) {
             const group = document.getElementById(groupId);
             if (!group) return;
@@ -618,6 +642,13 @@
             group.setAttribute('transform', `rotate(${rotation}, 100, 100)`);
         }
 
+        /**
+         * Loads proxy counts from all text files and updates the dashboard.
+         * Fetches counts for all, http, socks4, socks5, mega all, and mega formatted files,
+         * then populates stats, charts, and card values with animated transitions.
+         *
+         * @returns {Promise<Object>} An object with all proxy counts.
+         */
         async function loadData() {
             const data = {
                 all: await fetchCount('all/all.txt'),
@@ -671,6 +702,13 @@
             return data;
         }
 
+        /**
+         * Copies a proxy file URL to the clipboard or opens it in a new tab as fallback.
+         * Temporarily shows a "Copied!" state on the button.
+         *
+         * @param {string} path - The relative file path to compose the full URL.
+         * @param {HTMLElement} btn - The button element that was clicked.
+         */
         async function copyUrl(path, btn) {
             const url = `${baseUrl}/${path}`;
             try {
@@ -687,7 +725,10 @@
             }
         }
 
-        // Staggered reveal animation
+        /**
+         * Applies a staggered fade-in animation to stat cards, proxy cards, chart, and scan info.
+         * Each element is revealed with a small sequential delay.
+         */
         function revealElements() {
             const elements = document.querySelectorAll('.stat-card, .card, .chart-section, .scan-info');
             elements.forEach((el, i) => {

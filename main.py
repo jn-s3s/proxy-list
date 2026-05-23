@@ -12,7 +12,6 @@ import requests
 from tqdm.auto import tqdm
 
 if os.environ.get("GITHUB_ACTIONS") is None:
-    from pathlib import Path
     import dotenv
     dotenv.load_dotenv()
 
