@@ -7,39 +7,73 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #070b14;
-            --bg-elevated: #0f1623;
-            --bg-glass: rgba(15, 22, 35, 0.6);
-            --border: rgba(88, 166, 255, 0.12);
-            --border-hover: rgba(88, 166, 255, 0.3);
-            --text: #e6edf3;
-            --text-secondary: #7d8590;
-            --accent: #58a6ff;
-            --accent-glow: rgba(88, 166, 255, 0.4);
-            --success: #3fb950;
-            --warning: #d29922;
-            --danger: #f85149;
-            --gradient-start: #58a6ff;
-            --gradient-end: #bc8cff;
-            --purple: #bc8cff;
-            --pink: #ff7b72;
-            --cyan: #39c5cf;
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', '-apple-system', 'BlinkMacSystemFont', 'sans-serif']
+                    },
+                    colors: {
+                        dark: '#070b14',
+                        elevated: '#0f1623',
+                        'glass': 'rgba(15, 22, 35, 0.6)',
+                        border: 'rgba(88, 166, 255, 0.12)',
+                        'border-hover': 'rgba(88, 166, 255, 0.3)',
+                        muted: '#7d8590',
+                        accent: '#58a6ff',
+                        purple: '#bc8cff',
+                        cyan: '#39c5cf',
+                        success: '#3fb950',
+                        warning: '#d29922',
+                        danger: '#f85149',
+                        pink: '#ff7b72',
+                    },
+                    animation: {
+                        'mesh': 'meshMove 20s ease-in-out infinite',
+                        'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
+                        'pulse-dot': 'pulse-dot 2s infinite',
+                        'bar-fill': 'barFill 2s ease-in-out infinite',
+                        'spin-slow': 'spin 0.8s linear infinite',
+                    },
+                    keyframes: {
+                        meshMove: {
+                            '0%, 100%': { transform: 'translate(0, 0) rotate(0deg)' },
+                            '33%': { transform: 'translate(-2%, 2%) rotate(1deg)' },
+                            '66%': { transform: 'translate(2%, -1%) rotate(-1deg)' },
+                        },
+                        'pulse-glow': {
+                            '0%, 100%': { filter: 'drop-shadow(0 0 20px rgba(88, 166, 255, 0.4))', transform: 'scale(1)' },
+                            '50%': { filter: 'drop-shadow(0 0 40px rgba(88, 166, 255, 0.4))', transform: 'scale(1.05)' },
+                        },
+                        'pulse-dot': {
+                            '0%, 100%': { opacity: '1', transform: 'scale(1)' },
+                            '50%': { opacity: '0.6', transform: 'scale(0.85)' },
+                        },
+                        barFill: {
+                            '0%': { width: '0%', left: '0' },
+                            '50%': { width: '60%', left: '20%' },
+                            '100%': { width: '0%', left: '100%' },
+                        },
+                    },
+                }
+            }
         }
+    </script>
+    <style>
+        /* Reserved for complex animations & states that Tailwind utilities cannot cleanly replace */
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--bg);
-            color: var(--text);
+            background: #070b14;
+            color: #e6edf3;
             min-height: 100vh;
             line-height: 1.5;
             overflow-x: hidden;
         }
 
-        /* Animated background mesh */
         .bg-mesh {
             position: fixed;
             inset: 0;
@@ -62,17 +96,10 @@
             animation: meshMove 20s ease-in-out infinite;
         }
 
-        @keyframes meshMove {
-            0%, 100% { transform: translate(0, 0) rotate(0deg); }
-            33% { transform: translate(-2%, 2%) rotate(1deg); }
-            66% { transform: translate(2%, -1%) rotate(-1deg); }
-        }
-
-        /* Loading Screen */
         .loading-screen {
             position: fixed;
             inset: 0;
-            background: var(--bg);
+            background: #070b14;
             z-index: 1000;
             display: flex;
             flex-direction: column;
@@ -100,18 +127,6 @@
             animation: pulse-glow 2s ease-in-out infinite;
         }
 
-        @keyframes pulse-glow {
-            0%, 100% { filter: drop-shadow(0 0 20px var(--accent-glow)); transform: scale(1); }
-            50% { filter: drop-shadow(0 0 40px var(--accent-glow)); transform: scale(1.05); }
-        }
-
-        .loading-text {
-            font-size: 1.25rem;
-            font-weight: 500;
-            color: var(--text);
-            letter-spacing: 0.05em;
-        }
-
         .loading-dots {
             display: inline-block;
             width: 3ch;
@@ -131,13 +146,6 @@
             100% { content: ''; }
         }
 
-        .loading-sub {
-            margin-top: 0.75rem;
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-            font-weight: 300;
-        }
-
         .loading-bar {
             width: 200px;
             height: 3px;
@@ -154,18 +162,11 @@
             top: 0;
             height: 100%;
             width: 0%;
-            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+            background: linear-gradient(90deg, #58a6ff, #bc8cff);
             border-radius: 3px;
             animation: barFill 2s ease-in-out infinite;
         }
 
-        @keyframes barFill {
-            0% { width: 0%; left: 0; }
-            50% { width: 60%; left: 20%; }
-            100% { width: 0%; left: 100%; }
-        }
-
-        /* Main Container */
         .container {
             position: relative;
             z-index: 1;
@@ -182,125 +183,42 @@
             transform: translateY(0);
         }
 
-        /* Header */
-        header {
-            text-align: center;
-            margin-bottom: 3rem;
-        }
-
-        .logo {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.75rem;
-            margin-bottom: 1rem;
-        }
-
-        .logo-icon {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: 0 8px 32px var(--accent-glow);
-        }
-
-        .logo-text {
-            font-size: 1.75rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--text), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        header p {
-            color: var(--text-secondary);
-            font-size: 1.05rem;
-            font-weight: 300;
-            max-width: 480px;
-            margin: 0 auto;
-            line-height: 1.7;
-        }
-
-        .meta {
-            display: flex;
-            justify-content: center;
-            gap: 1.5rem;
-            flex-wrap: wrap;
-            margin-top: 1.75rem;
-            font-size: 0.8rem;
-        }
-
-        .meta-tag {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.4rem 1rem;
-            background: var(--bg-glass);
-            border: 1px solid var(--border);
-            border-radius: 999px;
-            backdrop-filter: blur(10px);
-            color: var(--text-secondary);
-            transition: all 0.3s ease;
-        }
-
-        .meta-tag:hover {
-            border-color: var(--border-hover);
-            color: var(--text);
-        }
-
-        .meta-tag .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--success);
-            box-shadow: 0 0 8px rgba(63, 185, 80, 0.5);
-            animation: pulse-dot 2s infinite;
-        }
-
-        @keyframes pulse-dot {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.6; transform: scale(0.85); }
-        }
-
-        /* Stats Overview */
-        .stats-overview {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
-            margin-bottom: 3rem;
-        }
-
-        .stat-card {
-            background: var(--bg-glass);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 1.5rem;
-            text-align: center;
-            backdrop-filter: blur(10px);
+        .stat-card, .card, .chart-section, .scan-info {
             opacity: 0;
             transform: translateY(20px);
             transition: all 0.5s ease;
         }
 
-        .stat-card.visible {
+        .stat-card.visible, .card.visible, .chart-section.visible, .scan-info.visible {
             opacity: 1;
             transform: translateY(0);
         }
 
-        .stat-card:hover {
-            border-color: var(--border-hover);
-            transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #58a6ff, #bc8cff);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 8px 32px rgba(88, 166, 255, 0.4);
+        }
+
+        .logo-text {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #e6edf3, #58a6ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .stat-value {
             font-size: 2rem;
             font-weight: 800;
-            background: linear-gradient(135deg, var(--accent), var(--purple));
+            background: linear-gradient(135deg, #58a6ff, #bc8cff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -311,67 +229,51 @@
             justify-content: center;
         }
 
-        .stat-value .spinner {
+        .spinner-sm {
             width: 24px;
             height: 24px;
             border: 2px solid rgba(88, 166, 255, 0.2);
-            border-top-color: var(--accent);
+            border-top-color: #58a6ff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .spinner-md {
+            width: 28px;
+            height: 28px;
+            border: 2.5px solid rgba(88, 166, 255, 0.15);
+            border-top-color: #58a6ff;
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
 
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        .stat-label {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            margin-top: 0.25rem;
-            font-weight: 400;
-        }
-
-        /* Chart Section */
-        .chart-section {
-            background: var(--bg-glass);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 2rem;
-            margin-bottom: 3rem;
-            backdrop-filter: blur(10px);
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #58a6ff, #bc8cff);
             opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.6s ease;
+            transition: opacity 0.35s ease;
         }
 
-        .chart-section.visible {
-            opacity: 1;
-            transform: translateY(0);
+        .card:hover::before { opacity: 1; }
+
+        .card:hover {
+            box-shadow: 0 20px 48px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(88, 166, 255, 0.3);
         }
 
-        .chart-section:hover {
-            border-color: var(--border-hover);
-        }
-
-        .chart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .chart-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text);
-        }
-
-        .chart-body {
-            display: flex;
-            align-items: center;
-            gap: 3rem;
-            flex-wrap: wrap;
-            justify-content: center;
+        .meta-tag .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #3fb950;
+            box-shadow: 0 0 8px rgba(63, 185, 80, 0.5);
+            animation: pulse-dot 2s infinite;
         }
 
         .donut-chart {
@@ -405,371 +307,42 @@
         .donut-center .total {
             font-size: 2rem;
             font-weight: 800;
-            color: var(--text);
+            color: #e6edf3;
             line-height: 1;
         }
 
         .donut-center .label {
             font-size: 0.75rem;
-            color: var(--text-secondary);
+            color: #7d8590;
             margin-top: 0.25rem;
         }
 
-        .chart-legend {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            min-width: 200px;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            padding: 0.75rem 1rem;
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 10px;
-            transition: all 0.3s ease;
-        }
-
-        .legend-item:hover {
-            background: rgba(255, 255, 255, 0.05);
-            transform: translateX(4px);
-        }
-
-        .legend-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 4px;
-            flex-shrink: 0;
-        }
-
-        .legend-info {
-            flex: 1;
-        }
-
-        .legend-name {
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--text);
-        }
-
-        .legend-bar {
-            width: 100%;
-            height: 4px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 2px;
-            margin-top: 0.35rem;
-            overflow: hidden;
-        }
-
-        .legend-bar-fill {
-            height: 100%;
-            border-radius: 2px;
-            transition: width 1.5s ease-out;
-        }
-
-        .legend-count {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            min-width: 3ch;
-            text-align: right;
-        }
-
-        /* Section Title */
-        .section-title {
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: var(--text-secondary);
-            margin-bottom: 1.25rem;
-            padding-left: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-weight: 500;
-        }
-
-        .section-title::before {
-            content: '';
-            width: 4px;
-            height: 16px;
-            background: linear-gradient(180deg, var(--gradient-start), var(--gradient-end));
-            border-radius: 2px;
-        }
-
-        /* Proxy Cards Grid */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2.5rem;
-        }
-
-        .card {
-            background: var(--bg-glass);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 1.5rem;
-            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(10px);
-            opacity: 0;
-            transform: translateY(20px);
-        }
-
-        .card.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
-            opacity: 0;
-            transition: opacity 0.35s ease;
-        }
-
-        .card:hover {
-            border-color: var(--border-hover);
-            transform: translateY(-4px);
-            box-shadow: 0 20px 48px rgba(0, 0, 0, 0.4), 0 0 0 1px var(--border-hover);
-        }
-
-        .card:hover::before { opacity: 1; }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 0.75rem;
-        }
-
-        .card-title {
-            font-weight: 600;
-            font-size: 1rem;
-            color: var(--text);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .card-badge {
-            font-size: 0.7rem;
-            padding: 0.25rem 0.75rem;
-            border-radius: 999px;
-            font-weight: 600;
-            letter-spacing: 0.02em;
-        }
-
-        .badge-mixed {
-            background: linear-gradient(135deg, rgba(88, 166, 255, 0.15), rgba(188, 140, 255, 0.15));
-            color: var(--accent);
-            border: 1px solid rgba(88, 166, 255, 0.2);
-        }
-
-        .badge-http {
-            background: rgba(88, 166, 255, 0.1);
-            color: var(--accent);
-            border: 1px solid rgba(88, 166, 255, 0.2);
-        }
-
-        .badge-socks4 {
-            background: rgba(188, 140, 255, 0.1);
-            color: var(--purple);
-            border: 1px solid rgba(188, 140, 255, 0.2);
-        }
-
-        .badge-socks5 {
-            background: rgba(57, 197, 207, 0.1);
-            color: var(--cyan);
-            border: 1px solid rgba(57, 197, 207, 0.2);
-        }
-
-        .card-count {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: var(--text);
-            margin-bottom: 0.25rem;
-            line-height: 1.2;
-            min-height: 3rem;
-            display: flex;
-            align-items: center;
-        }
-
-        .card-count .spinner {
-            width: 28px;
-            height: 28px;
-            border: 2.5px solid rgba(88, 166, 255, 0.15);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        .card-label {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            margin-bottom: 1.25rem;
-            font-weight: 300;
-        }
-
-        .card-actions {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 0.6rem 0.75rem;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            background: transparent;
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            text-decoration: none;
-            text-align: center;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.4rem;
-            font-family: inherit;
-        }
-
-        .btn:hover {
-            border-color: var(--border-hover);
-            color: var(--text);
-            background: rgba(88, 166, 255, 0.05);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-            border: none;
-            color: #fff;
-            font-weight: 600;
-            box-shadow: 0 4px 16px rgba(88, 166, 255, 0.3);
-        }
-
-        .btn-primary:hover {
-            box-shadow: 0 6px 24px rgba(88, 166, 255, 0.5);
-            transform: translateY(-1px);
-            color: #fff;
-            background: linear-gradient(135deg, var(--gradient-start), var(--gradient-end));
-        }
-
         .btn.copied {
-            background: var(--success) !important;
+            background: #3fb950 !important;
             color: #fff !important;
             box-shadow: 0 4px 16px rgba(63, 185, 80, 0.4) !important;
-        }
-
-        /* Scan Info Section */
-        .scan-info {
-            background: var(--bg-glass);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 1.5rem;
-            backdrop-filter: blur(10px);
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.6s ease;
-        }
-
-        .scan-info.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .scan-info:hover {
-            border-color: var(--border-hover);
-        }
-
-        .scan-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .scan-item {
-            display: flex;
-            flex-direction: column;
-            gap: 0.35rem;
-        }
-
-        .scan-item-label {
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.08em;
-        }
-
-        .scan-item-value {
-            font-size: 0.95rem;
-            font-weight: 500;
-            color: var(--text);
-        }
-
-        .scan-item-value.accent {
-            color: var(--accent);
-        }
-
-        .scan-item-value.success {
-            color: var(--success);
-        }
-
-        /* Footer */
-        footer {
-            text-align: center;
-            margin-top: 3rem;
-            padding-top: 2rem;
-            border-top: 1px solid var(--border);
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-            font-weight: 300;
-        }
-
-        footer a {
-            color: var(--accent);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s ease;
-        }
-
-        footer a:hover { color: var(--gradient-end); }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .stats-overview { grid-template-columns: repeat(2, 1fr); }
-            .chart-body { flex-direction: column; gap: 2rem; }
-            .container { padding: 2rem 1rem; }
-            header h1 { font-size: 2rem; }
         }
     </style>
 </head>
 <body>
+
+    <!-- Animated Background Mesh -->
     <div class="bg-mesh"></div>
 
     <!-- Loading Screen -->
     <div class="loading-screen" id="loading-screen">
         <div class="loading-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.5">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#58a6ff" stroke-width="1.5">
                 <circle cx="12" cy="12" r="10" stroke-dasharray="4 4" opacity="0.5"/>
-                <circle cx="12" cy="12" r="5" fill="var(--accent)" opacity="0.3"/>
+                <circle cx="12" cy="12" r="5" fill="#58a6ff" opacity="0.3"/>
                 <path d="M12 2v4M12 18v4M2 12h4M18 12h4" stroke-linecap="round"/>
-                <circle cx="12" cy="12" r="2" fill="var(--accent)"/>
+                <circle cx="12" cy="12" r="2" fill="#58a6ff"/>
             </svg>
         </div>
-        <div class="loading-text">Scanning proxy sources<span class="loading-dots"></span></div>
-        <div class="loading-sub">Fetching and validating proxy lists from multiple sources</div>
+        <div class="text-[#e6edf3] text-xl font-medium tracking-wider">
+            Scanning proxy sources<span class="loading-dots"></span>
+        </div>
+        <div class="mt-3 text-sm text-[#7d8590] font-light">Fetching and validating proxy lists from multiple sources</div>
         <div class="loading-bar">
             <div class="loading-bar-fill"></div>
         </div>
@@ -777,56 +350,66 @@
 
     <!-- Main Content -->
     <div class="container" id="main-content">
-        <header>
-            <div class="logo">
+
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <div class="inline-flex items-center gap-3 mb-4">
                 <div class="logo-icon">🌐</div>
                 <div class="logo-text">Proxy List</div>
             </div>
-            <p>Automatically fetch, test, and publish fresh HTTP/SOCKS4/SOCKS5 proxy lists. Updated every 2 hours via GitHub Actions.</p>
-            <div class="meta">
-                <span class="meta-tag"><span class="dot"></span> Live Auto-Updated</span>
-                <span class="meta-tag">⏰ Every 2–8 Hours</span>
-                <span class="meta-tag" id="last-updated">📅 <!--TIMESTAMP--></span>
+            <p class="text-[#7d8590] text-base font-light max-w-[480px] mx-auto leading-relaxed">
+                Automatically fetch, test, and publish fresh HTTP/SOCKS4/SOCKS5 proxy lists. Updated every 2 hours via GitHub Actions.
+            </p>
+            <div class="flex justify-center gap-6 flex-wrap mt-7">
+                <span class="meta-tag inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs text-[#7d8590] border border-[rgba(88,166,255,0.12)] backdrop-blur bg-[rgba(15,22,35,0.6)] transition-all duration-300 hover:border-[rgba(88,166,255,0.3)] hover:text-[#e6edf3]">
+                    <span class="dot"></span> Live Auto-Updated
+                </span>
+                <span class="meta-tag inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs text-[#7d8590] border border-[rgba(88,166,255,0.12)] backdrop-blur bg-[rgba(15,22,35,0.6)] transition-all duration-300 hover:border-[rgba(88,166,255,0.3)] hover:text-[#e6edf3]">
+                    ⏰ Every 2–8 Hours
+                </span>
+                <span class="meta-tag inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs text-[#7d8590] border border-[rgba(88,166,255,0.12)] backdrop-blur bg-[rgba(15,22,35,0.6)] transition-all duration-300 hover:border-[rgba(88,166,255,0.3)] hover:text-[#e6edf3]" id="last-updated">
+                    📅 <!--TIMESTAMP-->
+                </span>
             </div>
         </header>
 
         <!-- Stats Overview -->
-        <div class="stats-overview" id="stats-overview">
-            <div class="stat-card">
-                <div class="stat-value" id="stat-total"><span class="spinner"></span></div>
-                <div class="stat-label">Total Proxies</div>
+        <div class="grid grid-cols-4 max-md:grid-cols-2 gap-4 mb-12" id="stats-overview">
+            <div class="stat-card bg-[rgba(15,22,35,0.6)] border border-[rgba(88,166,255,0.12)] rounded-2xl p-6 text-center backdrop-blur hover:border-[rgba(88,166,255,0.3)] hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.3)] transition-all duration-500">
+                <div class="stat-value" id="stat-total"><span class="spinner-sm"></span></div>
+                <div class="text-xs text-[#7d8590] mt-1 font-normal">Total Proxies</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-value" id="stat-http"><span class="spinner"></span></div>
-                <div class="stat-label">HTTP</div>
+            <div class="stat-card bg-[rgba(15,22,35,0.6)] border border-[rgba(88,166,255,0.12)] rounded-2xl p-6 text-center backdrop-blur hover:border-[rgba(88,166,255,0.3)] hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.3)] transition-all duration-500">
+                <div class="stat-value" id="stat-http"><span class="spinner-sm"></span></div>
+                <div class="text-xs text-[#7d8590] mt-1 font-normal">HTTP</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-value" id="stat-socks4"><span class="spinner"></span></div>
-                <div class="stat-label">SOCKS4</div>
+            <div class="stat-card bg-[rgba(15,22,35,0.6)] border border-[rgba(88,166,255,0.12)] rounded-2xl p-6 text-center backdrop-blur hover:border-[rgba(88,166,255,0.3)] hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.3)] transition-all duration-500">
+                <div class="stat-value" id="stat-socks4"><span class="spinner-sm"></span></div>
+                <div class="text-xs text-[#7d8590] mt-1 font-normal">SOCKS4</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-value" id="stat-socks5"><span class="spinner"></span></div>
-                <div class="stat-label">SOCKS5</div>
+            <div class="stat-card bg-[rgba(15,22,35,0.6)] border border-[rgba(88,166,255,0.12)] rounded-2xl p-6 text-center backdrop-blur hover:border-[rgba(88,166,255,0.3)] hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,0.3)] transition-all duration-500">
+                <div class="stat-value" id="stat-socks5"><span class="spinner-sm"></span></div>
+                <div class="text-xs text-[#7d8590] mt-1 font-normal">SOCKS5</div>
             </div>
         </div>
 
         <!-- Chart Section -->
-        <div class="chart-section" id="chart-section">
-            <div class="chart-header">
-                <div class="chart-title">Proxy Distribution</div>
+        <div class="chart-section bg-[rgba(15,22,35,0.6)] border border-[rgba(88,166,255,0.12)] rounded-2xl p-8 mb-12 backdrop-blur hover:border-[rgba(88,166,255,0.3)] transition-all duration-600" id="chart-section">
+            <div class="flex justify-between items-center mb-6 flex-wrap gap-4">
+                <div class="text-lg font-semibold text-[#e6edf3]">Proxy Distribution</div>
             </div>
-            <div class="chart-body">
+            <div class="flex items-center gap-12 flex-wrap justify-center">
                 <div class="donut-chart">
                     <svg viewBox="0 0 200 200" id="donut-svg">
                         <circle cx="100" cy="100" r="76" stroke="rgba(88, 166, 255, 0.1)" stroke-dasharray="477" stroke-dashoffset="0"/>
                         <g id="g-arc-http" transform="rotate(0, 100, 100)">
-                            <circle cx="100" cy="100" r="76" stroke="var(--accent)" stroke-dasharray="0 477" stroke-linecap="round"/>
+                            <circle cx="100" cy="100" r="76" stroke="#58a6ff" stroke-dasharray="0 477" stroke-linecap="round"/>
                         </g>
                         <g id="g-arc-socks4" transform="rotate(0, 100, 100)">
-                            <circle cx="100" cy="100" r="76" stroke="var(--purple)" stroke-dasharray="0 477" stroke-linecap="round"/>
+                            <circle cx="100" cy="100" r="76" stroke="#bc8cff" stroke-dasharray="0 477" stroke-linecap="round"/>
                         </g>
                         <g id="g-arc-socks5" transform="rotate(0, 100, 100)">
-                            <circle cx="100" cy="100" r="76" stroke="var(--cyan)" stroke-dasharray="0 477" stroke-linecap="round"/>
+                            <circle cx="100" cy="100" r="76" stroke="#39c5cf" stroke-dasharray="0 477" stroke-linecap="round"/>
                         </g>
                     </svg>
                     <div class="donut-center">
@@ -834,154 +417,178 @@
                         <div class="label">proxies</div>
                     </div>
                 </div>
-                <div class="chart-legend">
-                    <div class="legend-item">
-                        <div class="legend-dot" style="background: var(--accent);"></div>
-                        <div class="legend-info">
-                            <div class="legend-name">HTTP</div>
-                            <div class="legend-bar">
-                                <div class="legend-bar-fill" id="bar-http" style="width: 0%; background: var(--accent);"></div>
+                <div class="flex flex-col gap-4 min-w-[200px]">
+                    <!-- HTTP -->
+                    <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-[rgba(255,255,255,0.02)] hover:bg-[rgba(255,255,255,0.05)] hover:translate-x-1 transition-all duration-300">
+                        <div class="w-3 h-3 rounded flex-shrink-0" style="background: #58a6ff;"></div>
+                        <div class="flex-1">
+                            <div class="text-sm font-medium text-[#e6edf3]">HTTP</div>
+                            <div class="w-full h-1 bg-[rgba(255,255,255,0.05)] rounded mt-1.5 overflow-hidden">
+                                <div class="h-full rounded transition-all duration-1000 ease-out" id="bar-http" style="width: 0%; background: #58a6ff;"></div>
                             </div>
                         </div>
-                        <div class="legend-count" id="legend-http">—</div>
+                        <div class="text-sm font-semibold text-[#7d8590] min-w-[3ch] text-right" id="legend-http">—</div>
                     </div>
-                    <div class="legend-item">
-                        <div class="legend-dot" style="background: var(--purple);"></div>
-                        <div class="legend-info">
-                            <div class="legend-name">SOCKS4</div>
-                            <div class="legend-bar">
-                                <div class="legend-bar-fill" id="bar-socks4" style="width: 0%; background: var(--purple);"></div>
+                    <!-- SOCKS4 -->
+                    <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-[rgba(255,255,255,0.02)] hover:bg-[rgba(255,255,255,0.05)] hover:translate-x-1 transition-all duration-300">
+                        <div class="w-3 h-3 rounded flex-shrink-0" style="background: #bc8cff;"></div>
+                        <div class="flex-1">
+                            <div class="text-sm font-medium text-[#e6edf3]">SOCKS4</div>
+                            <div class="w-full h-1 bg-[rgba(255,255,255,0.05)] rounded mt-1.5 overflow-hidden">
+                                <div class="h-full rounded transition-all duration-1000 ease-out" id="bar-socks4" style="width: 0%; background: #bc8cff;"></div>
                             </div>
                         </div>
-                        <div class="legend-count" id="legend-socks4">—</div>
+                        <div class="text-sm font-semibold text-[#7d8590] min-w-[3ch] text-right" id="legend-socks4">—</div>
                     </div>
-                    <div class="legend-item">
-                        <div class="legend-dot" style="background: var(--cyan);"></div>
-                        <div class="legend-info">
-                            <div class="legend-name">SOCKS5</div>
-                            <div class="legend-bar">
-                                <div class="legend-bar-fill" id="bar-socks5" style="width: 0%; background: var(--cyan);"></div>
+                    <!-- SOCKS5 -->
+                    <div class="flex items-center gap-3 px-4 py-3 rounded-xl bg-[rgba(255,255,255,0.02)] hover:bg-[rgba(255,255,255,0.05)] hover:translate-x-1 transition-all duration-300">
+                        <div class="w-3 h-3 rounded flex-shrink-0" style="background: #39c5cf;"></div>
+                        <div class="flex-1">
+                            <div class="text-sm font-medium text-[#e6edf3]">SOCKS5</div>
+                            <div class="w-full h-1 bg-[rgba(255,255,255,0.05)] rounded mt-1.5 overflow-hidden">
+                                <div class="h-full rounded transition-all duration-1000 ease-out" id="bar-socks5" style="width: 0%; background: #39c5cf;"></div>
                             </div>
                         </div>
-                        <div class="legend-count" id="legend-socks5">—</div>
+                        <div class="text-sm font-semibold text-[#7d8590] min-w-[3ch] text-right" id="legend-socks5">—</div>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- All Proxies -->
-        <div class="section-title">All Proxies</div>
-        <div class="grid" id="all-grid">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">📦 all.txt</div>
-                    <div class="card-badge badge-mixed">Mixed</div>
+        <div class="flex items-center gap-3 mb-5 pl-2">
+            <div class="w-1 h-4 rounded bg-gradient-to-b from-[#58a6ff] to-[#bc8cff]"></div>
+            <span class="text-xs uppercase tracking-widest text-[#7d8590] font-medium">All Proxies</span>
+        </div>
+        <div class="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4 mb-10" id="all-grid">
+            <!-- all.txt -->
+            <div class="card bg-[rgba(15,22,35,0.6)] border border-[rgba(88,166,255,0.12)] rounded-2xl p-6 backdrop-blur relative overflow-hidden hover:border-[rgba(88,166,255,0.3)] hover:-translate-y-1 transition-all duration-300">
+                <div class="flex justify-between items-start mb-3">
+                    <div class="font-semibold text-base text-[#e6edf3] flex items-center gap-2">📦 all.txt</div>
+                    <div class="text-xs px-3 py-1 rounded-full font-semibold tracking-wide bg-gradient-to-r from-[rgba(88,166,255,0.15)] to-[rgba(188,140,255,0.15)] text-[#58a6ff] border border-[rgba(88,166,255,0.2)]">Mixed</div>
                 </div>
-                <div class="card-count" id="count-all"><span class="spinner"></span></div>
-                <div class="card-label">Combined proxy list across all protocols</div>
-                <div class="card-actions">
-                    <a class="btn" href="all/all.txt" target="_blank">🔗 View Raw</a>
-                    <button class="btn btn-primary" onclick="copyUrl('all/all.txt', this)">📋 Copy URL</button>
-                </div>
-            </div>
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">🌐 http.txt</div>
-                    <div class="card-badge badge-http">HTTP</div>
-                </div>
-                <div class="card-count" id="count-http"><span class="spinner"></span></div>
-                <div class="card-label">HTTP/HTTPS proxies only</div>
-                <div class="card-actions">
-                    <a class="btn" href="all/http.txt" target="_blank">🔗 View Raw</a>
-                    <button class="btn btn-primary" onclick="copyUrl('all/http.txt', this)">📋 Copy URL</button>
+                <div class="text-[2.5rem] font-extrabold text-[#e6edf3] mb-1 leading-tight min-h-[3rem] flex items-center" id="count-all"><span class="spinner-md"></span></div>
+                <div class="text-sm text-[#7d8590] mb-5 font-light">Combined proxy list across all protocols</div>
+                <div class="flex gap-2">
+                    <a class="btn flex-1 px-3 py-2.5 rounded-xl border border-[rgba(88,166,255,0.12)] bg-transparent text-[#7d8590] text-sm font-medium cursor-pointer transition-all duration-300 hover:border-[rgba(88,166,255,0.3)] hover:text-[#e6edf3] hover:bg-[rgba(88,166,255,0.05)] no-underline text-center inline-flex items-center justify-center gap-1.5 font-sans" href="all/all.txt" target="_blank">🔗 View Raw</a>
+                    <button class="btn flex-1 px-3 py-2.5 rounded-xl bg-gradient-to-r from-[#58a6ff] to-[#bc8cff] border-none text-white font-semibold shadow-[0_4px_16px_rgba(88,166,255,0.3)] cursor-pointer transition-all duration-300 hover:shadow-[0_6px_24px_rgba(88,166,255,0.5)] hover:-translate-y-px text-sm inline-flex items-center justify-center gap-1.5 font-sans" onclick="copyUrl('all/all.txt', this)">📋 Copy URL</button>
                 </div>
             </div>
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">🔒 socks4.txt</div>
-                    <div class="card-badge badge-socks4">SOCKS4</div>
+            <!-- http.txt -->
+            <div class="card bg-[rgba(15,22,35,0.6)] border border-[rgba(88,166,255,0.12)] rounded-2xl p-6 backdrop-blur relative overflow-hidden hover:border-[rgba(88,166,255,0.3)] hover:-translate-y-1 transition-all duration-300">
+                <div class="flex justify-between items-start mb-3">
+                    <div class="font-semibold text-base text-[#e6edf3] flex items-center gap-2">🌐 http.txt</div>
+                    <div class="text-xs px-3 py-1 rounded-full font-semibold tracking-wide bg-[rgba(88,166,255,0.1)] text-[#58a6ff] border border-[rgba(88,166,255,0.2)]">HTTP</div>
                 </div>
-                <div class="card-count" id="count-socks4"><span class="spinner"></span></div>
-                <div class="card-label">SOCKS4 proxies only</div>
-                <div class="card-actions">
-                    <a class="btn" href="all/socks4.txt" target="_blank">🔗 View Raw</a>
-                    <button class="btn btn-primary" onclick="copyUrl('all/socks4.txt', this)">📋 Copy URL</button>
+                <div class="text-[2.5rem] font-extrabold text-[#e6edf3] mb-1 leading-tight min-h-[3rem] flex items-center" id="count-http"><span class="spinner-md"></span></div>
+                <div class="text-sm text-[#7d8590] mb-5 font-light">HTTP/HTTPS proxies only</div>
+                <div class="flex gap-2">
+                    <a class="btn flex-1 px-3 py-2.5 rounded-xl border border-[rgba(88,166,255,0.12)] bg-transparent text-[#7d8590] text-sm font-medium cursor-pointer transition-all duration-300 hover:border-[rgba(88,166,255,0.3)] hover:text-[#e6edf3] hover:bg-[rgba(88,166,255,0.05)] no-underline text-center inline-flex items-center justify-center gap-1.5 font-sans" href="all/http.txt" target="_blank">🔗 View Raw</a>
+                    <button class="btn flex-1 px-3 py-2.5 rounded-xl bg-gradient-to-r from-[#58a6ff] to-[#bc8cff] border-none text-white font-semibold shadow-[0_4px_16px_rgba(88,166,255,0.3)] cursor-pointer transition-all duration-300 hover:shadow-[0_6px_24px_rgba(88,166,255,0.5)] hover:-translate-y-px text-sm inline-flex items-center justify-center gap-1.5 font-sans" onclick="copyUrl('all/http.txt', this)">📋 Copy URL</button>
                 </div>
             </div>
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">🔐 socks5.txt</div>
-                    <div class="card-badge badge-socks5">SOCKS5</div>
+            <!-- socks4.txt -->
+            <div class="card bg-[rgba(15,22,35,0.6)] border border-[rgba(88,166,255,0.12)] rounded-2xl p-6 backdrop-blur relative overflow-hidden hover:border-[rgba(88,166,255,0.3)] hover:-translate-y-1 transition-all duration-300">
+                <div class="flex justify-between items-start mb-3">
+                    <div class="font-semibold text-base text-[#e6edf3] flex items-center gap-2">🔒 socks4.txt</div>
+                    <div class="text-xs px-3 py-1 rounded-full font-semibold tracking-wide bg-[rgba(188,140,255,0.1)] text-[#bc8cff] border border-[rgba(188,140,255,0.2)]">SOCKS4</div>
                 </div>
-                <div class="card-count" id="count-socks5"><span class="spinner"></span></div>
-                <div class="card-label">SOCKS5 proxies only</div>
-                <div class="card-actions">
-                    <a class="btn" href="all/socks5.txt" target="_blank">🔗 View Raw</a>
-                    <button class="btn btn-primary" onclick="copyUrl('all/socks5.txt', this)">📋 Copy URL</button>
+                <div class="text-[2.5rem] font-extrabold text-[#e6edf3] mb-1 leading-tight min-h-[3rem] flex items-center" id="count-socks4"><span class="spinner-md"></span></div>
+                <div class="text-sm text-[#7d8590] mb-5 font-light">SOCKS4 proxies only</div>
+                <div class="flex gap-2">
+                    <a class="btn flex-1 px-3 py-2.5 rounded-xl border border-[rgba(88,166,255,0.12)] bg-transparent text-[#7d8590] text-sm font-medium cursor-pointer transition-all duration-300 hover:border-[rgba(88,166,255,0.3)] hover:text-[#e6edf3] hover:bg-[rgba(88,166,255,0.05)] no-underline text-center inline-flex items-center justify-center gap-1.5 font-sans" href="all/socks4.txt" target="_blank">🔗 View Raw</a>
+                    <button class="btn flex-1 px-3 py-2.5 rounded-xl bg-gradient-to-r from-[#58a6ff] to-[#bc8cff] border-none text-white font-semibold shadow-[0_4px_16px_rgba(88,166,255,0.3)] cursor-pointer transition-all duration-300 hover:shadow-[0_6px_24px_rgba(88,166,255,0.5)] hover:-translate-y-px text-sm inline-flex items-center justify-center gap-1.5 font-sans" onclick="copyUrl('all/socks4.txt', this)">📋 Copy URL</button>
+                </div>
+            </div>
+            <!-- socks5.txt -->
+            <div class="card bg-[rgba(15,22,35,0.6)] border border-[rgba(88,166,255,0.12)] rounded-2xl p-6 backdrop-blur relative overflow-hidden hover:border-[rgba(88,166,255,0.3)] hover:-translate-y-1 transition-all duration-300">
+                <div class="flex justify-between items-start mb-3">
+                    <div class="font-semibold text-base text-[#e6edf3] flex items-center gap-2">🔐 socks5.txt</div>
+                    <div class="text-xs px-3 py-1 rounded-full font-semibold tracking-wide bg-[rgba(57,197,207,0.1)] text-[#39c5cf] border border-[rgba(57,197,207,0.2)]">SOCKS5</div>
+                </div>
+                <div class="text-[2.5rem] font-extrabold text-[#e6edf3] mb-1 leading-tight min-h-[3rem] flex items-center" id="count-socks5"><span class="spinner-md"></span></div>
+                <div class="text-sm text-[#7d8590] mb-5 font-light">SOCKS5 proxies only</div>
+                <div class="flex gap-2">
+                    <a class="btn flex-1 px-3 py-2.5 rounded-xl border border-[rgba(88,166,255,0.12)] bg-transparent text-[#7d8590] text-sm font-medium cursor-pointer transition-all duration-300 hover:border-[rgba(88,166,255,0.3)] hover:text-[#e6edf3] hover:bg-[rgba(88,166,255,0.05)] no-underline text-center inline-flex items-center justify-center gap-1.5 font-sans" href="all/socks5.txt" target="_blank">🔗 View Raw</a>
+                    <button class="btn flex-1 px-3 py-2.5 rounded-xl bg-gradient-to-r from-[#58a6ff] to-[#bc8cff] border-none text-white font-semibold shadow-[0_4px_16px_rgba(88,166,255,0.3)] cursor-pointer transition-all duration-300 hover:shadow-[0_6px_24px_rgba(88,166,255,0.5)] hover:-translate-y-px text-sm inline-flex items-center justify-center gap-1.5 font-sans" onclick="copyUrl('all/socks5.txt', this)">📋 Copy URL</button>
                 </div>
             </div>
         </div>
 
         <!-- Megabasterd -->
-        <div class="section-title">Megabasterd</div>
-        <div class="grid" id="mega-grid">
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">📦 all.txt</div>
-                    <div class="card-badge badge-mixed">Mixed</div>
+        <div class="flex items-center gap-3 mb-5 pl-2">
+            <div class="w-1 h-4 rounded bg-gradient-to-b from-[#58a6ff] to-[#bc8cff]"></div>
+            <span class="text-xs uppercase tracking-widest text-[#7d8590] font-medium">Megabasterd</span>
+        </div>
+        <div class="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-4 mb-10" id="mega-grid">
+            <!-- mega all.txt -->
+            <div class="card bg-[rgba(15,22,35,0.6)] border border-[rgba(88,166,255,0.12)] rounded-2xl p-6 backdrop-blur relative overflow-hidden hover:border-[rgba(88,166,255,0.3)] hover:-translate-y-1 transition-all duration-300">
+                <div class="flex justify-between items-start mb-3">
+                    <div class="font-semibold text-base text-[#e6edf3] flex items-center gap-2">📦 all.txt</div>
+                    <div class="text-xs px-3 py-1 rounded-full font-semibold tracking-wide bg-gradient-to-r from-[rgba(88,166,255,0.15)] to-[rgba(188,140,255,0.15)] text-[#58a6ff] border border-[rgba(88,166,255,0.2)]">Mixed</div>
                 </div>
-                <div class="card-count" id="count-mega-all"><span class="spinner"></span></div>
-                <div class="card-label">All proxies tested against mega.nz</div>
-                <div class="card-actions">
-                    <a class="btn" href="megabasterd/all.txt" target="_blank">🔗 View Raw</a>
-                    <button class="btn btn-primary" onclick="copyUrl('megabasterd/all.txt', this)">📋 Copy URL</button>
+                <div class="text-[2.5rem] font-extrabold text-[#e6edf3] mb-1 leading-tight min-h-[3rem] flex items-center" id="count-mega-all"><span class="spinner-md"></span></div>
+                <div class="text-sm text-[#7d8590] mb-5 font-light">All proxies tested against mega.nz</div>
+                <div class="flex gap-2">
+                    <a class="btn flex-1 px-3 py-2.5 rounded-xl border border-[rgba(88,166,255,0.12)] bg-transparent text-[#7d8590] text-sm font-medium cursor-pointer transition-all duration-300 hover:border-[rgba(88,166,255,0.3)] hover:text-[#e6edf3] hover:bg-[rgba(88,166,255,0.05)] no-underline text-center inline-flex items-center justify-center gap-1.5 font-sans" href="megabasterd/all.txt" target="_blank">🔗 View Raw</a>
+                    <button class="btn flex-1 px-3 py-2.5 rounded-xl bg-gradient-to-r from-[#58a6ff] to-[#bc8cff] border-none text-white font-semibold shadow-[0_4px_16px_rgba(88,166,255,0.3)] cursor-pointer transition-all duration-300 hover:shadow-[0_6px_24px_rgba(88,166,255,0.5)] hover:-translate-y-px text-sm inline-flex items-center justify-center gap-1.5 font-sans" onclick="copyUrl('megabasterd/all.txt', this)">📋 Copy URL</button>
                 </div>
             </div>
-            <div class="card">
-                <div class="card-header">
-                    <div class="card-title">📝 formatted-only.txt</div>
-                    <div class="card-badge badge-mixed">Mixed</div>
+            <!-- mega formatted-only.txt -->
+            <div class="card bg-[rgba(15,22,35,0.6)] border border-[rgba(88,166,255,0.12)] rounded-2xl p-6 backdrop-blur relative overflow-hidden hover:border-[rgba(88,166,255,0.3)] hover:-translate-y-1 transition-all duration-300">
+                <div class="flex justify-between items-start mb-3">
+                    <div class="font-semibold text-base text-[#e6edf3] flex items-center gap-2">📝 formatted-only.txt</div>
+                    <div class="text-xs px-3 py-1 rounded-full font-semibold tracking-wide bg-gradient-to-r from-[rgba(88,166,255,0.15)] to-[rgba(188,140,255,0.15)] text-[#58a6ff] border border-[rgba(88,166,255,0.2)]">Mixed</div>
                 </div>
-                <div class="card-count" id="count-mega-fmt"><span class="spinner"></span></div>
-                <div class="card-label">Megabasterd-formatted proxy list</div>
-                <div class="card-actions">
-                    <a class="btn" href="megabasterd/formatted-only.txt" target="_blank">🔗 View Raw</a>
-                    <button class="btn btn-primary" onclick="copyUrl('megabasterd/formatted-only.txt', this)">📋 Copy URL</button>
+                <div class="text-[2.5rem] font-extrabold text-[#e6edf3] mb-1 leading-tight min-h-[3rem] flex items-center" id="count-mega-fmt"><span class="spinner-md"></span></div>
+                <div class="text-sm text-[#7d8590] mb-5 font-light">Megabasterd-formatted proxy list</div>
+                <div class="flex gap-2">
+                    <a class="btn flex-1 px-3 py-2.5 rounded-xl border border-[rgba(88,166,255,0.12)] bg-transparent text-[#7d8590] text-sm font-medium cursor-pointer transition-all duration-300 hover:border-[rgba(88,166,255,0.3)] hover:text-[#e6edf3] hover:bg-[rgba(88,166,255,0.05)] no-underline text-center inline-flex items-center justify-center gap-1.5 font-sans" href="megabasterd/formatted-only.txt" target="_blank">🔗 View Raw</a>
+                    <button class="btn flex-1 px-3 py-2.5 rounded-xl bg-gradient-to-r from-[#58a6ff] to-[#bc8cff] border-none text-white font-semibold shadow-[0_4px_16px_rgba(88,166,255,0.3)] cursor-pointer transition-all duration-300 hover:shadow-[0_6px_24px_rgba(88,166,255,0.5)] hover:-translate-y-px text-sm inline-flex items-center justify-center gap-1.5 font-sans" onclick="copyUrl('megabasterd/formatted-only.txt', this)">📋 Copy URL</button>
                 </div>
             </div>
         </div>
 
         <!-- Scan Info -->
-        <div class="scan-info" id="scan-info">
-            <div class="section-title">Scan Details</div>
-            <div class="scan-grid">
-                <div class="scan-item">
-                    <div class="scan-item-label">Last Scan</div>
-                    <div class="scan-item-value accent" id="scan-last">—</div>
+        <div class="scan-info bg-[rgba(15,22,35,0.6)] border border-[rgba(88,166,255,0.12)] rounded-2xl p-6 backdrop-blur hover:border-[rgba(88,166,255,0.3)] transition-all duration-600" id="scan-info">
+            <div class="flex items-center gap-3 mb-5 pl-2">
+                <div class="w-1 h-4 rounded bg-gradient-to-b from-[#58a6ff] to-[#bc8cff]"></div>
+                <span class="text-xs uppercase tracking-widest text-[#7d8590] font-medium">Scan Details</span>
+            </div>
+            <div class="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-6">
+                <div class="flex flex-col gap-1">
+                    <div class="text-xs uppercase tracking-wide text-[#7d8590]">Last Scan</div>
+                    <div class="text-sm font-medium text-[#58a6ff]" id="scan-last">—</div>
                 </div>
-                <div class="scan-item">
-                    <div class="scan-item-label">Sources Checked</div>
-                    <div class="scan-item-value">HTTP / SOCKS4 / SOCKS5</div>
+                <div class="flex flex-col gap-1">
+                    <div class="text-xs uppercase tracking-wide text-[#7d8590]">Sources Checked</div>
+                    <div class="text-sm font-medium text-[#e6edf3]">HTTP / SOCKS4 / SOCKS5</div>
                 </div>
-                <div class="scan-item">
-                    <div class="scan-item-label">Validation</div>
-                    <div class="scan-item-value success">Latency & Availability Tested</div>
+                <div class="flex flex-col gap-1">
+                    <div class="text-xs uppercase tracking-wide text-[#7d8590]">Validation</div>
+                    <div class="text-sm font-medium text-[#3fb950]">Latency & Availability Tested</div>
                 </div>
-                <div class="scan-item">
-                    <div class="scan-item-label">Update Frequency</div>
-                    <div class="scan-item-value">Every 2 hours (All) / 8 hours (Mega)</div>
+                <div class="flex flex-col gap-1">
+                    <div class="text-xs uppercase tracking-wide text-[#7d8590]">Update Frequency</div>
+                    <div class="text-sm font-medium text-[#e6edf3]">Every 2 hours (All) / 8 hours (Mega)</div>
                 </div>
             </div>
         </div>
 
-        <footer>
-            <p>Powered by <a href="https://github.com/jn-s3s/proxy-list" target="_blank">proxy-list</a> on GitHub • Auto-generated by GitHub Actions</p>
+        <footer class="text-center mt-12 pt-8 border-t border-[rgba(88,166,255,0.12)] text-[#7d8590] text-sm font-light">
+            <p>Powered by <a href="https://github.com/jn-s3s/proxy-list" target="_blank" class="text-[#58a6ff] no-underline font-medium hover:text-[#bc8cff] transition-colors duration-200">proxy-list</a> on GitHub • Auto-generated by GitHub Actions</p>
         </footer>
     </div>
 
     <script>
         const baseUrl = window.location.origin + window.location.pathname.replace(/\/$/, '');
 
+        /**
+         * Fetches a proxy text file and counts non-empty lines.
+         *
+         * @param {string} path - Relative path to the proxy file.
+         * @returns {Promise<number>} The number of non-empty lines, or 0 on failure.
+         */
         async function fetchCount(path) {
             try {
                 const res = await fetch(path);
@@ -993,6 +600,15 @@
             }
         }
 
+        /**
+         * Animates a DOM element's text content from a start value to an end value.
+         * Uses eased (quartic ease-out) interpolation.
+         *
+         * @param {HTMLElement} element - The element to update.
+         * @param {number} start - The starting value.
+         * @param {number} end - The ending value.
+         * @param {number} [duration=1200] - Duration in milliseconds.
+         */
         function animateValue(element, start, end, duration = 1200) {
             const startTime = performance.now();
             function update(currentTime) {
@@ -1006,6 +622,15 @@
             requestAnimationFrame(update);
         }
 
+        /**
+         * Sets the visible arc segment for a donut chart group.
+         * Rotates the group to align the arc at the correct angular offset.
+         *
+         * @param {string} groupId - The id of the SVG <g> element for the arc.
+         * @param {number} value - The numeric value for this arc segment.
+         * @param {number} total - The total sum of all segments.
+         * @param {number} cumulativeValue - The sum of all preceding segments (for rotation offset).
+         */
         function setDonutArc(groupId, value, total, cumulativeValue) {
             const group = document.getElementById(groupId);
             if (!group) return;
@@ -1017,6 +642,13 @@
             group.setAttribute('transform', `rotate(${rotation}, 100, 100)`);
         }
 
+        /**
+         * Loads proxy counts from all text files and updates the dashboard.
+         * Fetches counts for all, http, socks4, socks5, mega all, and mega formatted files,
+         * then populates stats, charts, and card values with animated transitions.
+         *
+         * @returns {Promise<Object>} An object with all proxy counts.
+         */
         async function loadData() {
             const data = {
                 all: await fetchCount('all/all.txt'),
@@ -1070,6 +702,13 @@
             return data;
         }
 
+        /**
+         * Copies a proxy file URL to the clipboard or opens it in a new tab as fallback.
+         * Temporarily shows a "Copied!" state on the button.
+         *
+         * @param {string} path - The relative file path to compose the full URL.
+         * @param {HTMLElement} btn - The button element that was clicked.
+         */
         async function copyUrl(path, btn) {
             const url = `${baseUrl}/${path}`;
             try {
@@ -1086,7 +725,10 @@
             }
         }
 
-        // Staggered reveal animation
+        /**
+         * Applies a staggered fade-in animation to stat cards, proxy cards, chart, and scan info.
+         * Each element is revealed with a small sequential delay.
+         */
         function revealElements() {
             const elements = document.querySelectorAll('.stat-card, .card, .chart-section, .scan-info');
             elements.forEach((el, i) => {
