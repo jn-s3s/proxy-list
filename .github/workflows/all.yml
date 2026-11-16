@@ -40,13 +40,8 @@ jobs:
           MAX_WORKERS: ${{ vars.MAX_WORKERS }}
           FETCH_PROXY_TIMEOUT: ${{ vars.FETCH_PROXY_TIMEOUT }}
           PROXY_CHECK_TIMEOUT: ${{ vars.PROXY_CHECK_TIMEOUT }}
-          PROXY_CHECK_RETRIES: ${{ vars.PROXY_CHECK_RETRIES }}
-        run: |
-          mkdir -p _output/all
-          python main.py -F '_output/all/all.txt'
-          python main.py -F '_output/all/http.txt' --http-only
-          python main.py -F '_output/all/socks4.txt' --socks4-only
-          python main.py -F '_output/all/socks5.txt' --socks5-only
+          PROXY_CHECK_ATTEMPTS: ${{ vars.PROXY_CHECK_ATTEMPTS }}
+        run: python main.py --output-dir _output/all
 
       - name: Verify output files
         run: |
