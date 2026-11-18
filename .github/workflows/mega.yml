@@ -40,7 +40,7 @@ jobs:
           MAX_WORKERS: ${{ vars.MAX_WORKERS }}
           FETCH_PROXY_TIMEOUT: ${{ vars.FETCH_PROXY_TIMEOUT }}
           PROXY_CHECK_TIMEOUT: ${{ vars.PROXY_CHECK_TIMEOUT }}
-          PROXY_CHECK_RETRIES: ${{ vars.PROXY_CHECK_RETRIES }}
+          PROXY_CHECK_ATTEMPTS: ${{ vars.PROXY_CHECK_ATTEMPTS }}
         run: |
           mkdir -p _output/megabasterd
           python main.py -F '_output/megabasterd/formatted-only.txt' -P 'SOCKS4=*' -P 'SOCKS5=*'
@@ -80,12 +80,7 @@ jobs:
           fi
 
           rm -rf megabasterd index.html
-          if [ -d "/tmp/proxy-output/all" ]; then
-            mv /tmp/proxy-output/all all
-          fi
-          if [ -d "/tmp/proxy-output/megabasterd" ]; then
-            mv /tmp/proxy-output/megabasterd megabasterd
-          fi
+          mv /tmp/proxy-output/megabasterd megabasterd
           mv /tmp/proxy-output/index.html index.html
 
           git add -A
