@@ -80,6 +80,9 @@ python main.py all --filename proxies.txt
 given directory. All four are derived from one fetch, so `all.txt` is always the exact
 union of the three protocol files.
 
+Unvalidated lists are written in sorted order, so published files only change when
+proxies are added or removed. Validated lists stay ranked by latency, fastest first.
+
 ```bash
 python main.py all --output-dir ./out
 ```
@@ -103,7 +106,7 @@ python main.py httpbin.org/get -H "User-Agent: MyApp/1.0" -H "Accept: applicatio
 | `--socks4-only` | — | Return only SOCKS4 proxies |
 | `--socks5-only` | — | Return only SOCKS5 proxies |
 | `--add-prefix` | `-P` | Add prefix to proxy lines (format: `PROTOCOL=prefix`) |
-| `--limit` | `-L` | Limit the number of working proxies to return |
+| `--limit` | `-L` | Keep the N fastest working proxies (minimum 1, requires a target URL) |
 | `--output-dir` | `-O` | Write `all.txt` plus one file per protocol into a directory |
 | `--help` | — | Show help message and exit |
 

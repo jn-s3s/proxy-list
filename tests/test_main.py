@@ -184,6 +184,18 @@ def test_limit_keeps_the_fastest_rather_than_the_first_to_answer(monkeypatch):
     ]
 
 
+def test_score_proxies_breaks_latency_ties_deterministically(monkeypatch):
+    latencies = {"HTTP2.2.2.2:2": 0.2, "HTTP1.1.1.1:1": 0.2}
+    monkeypatch.setattr(
+        main, "_test_proxy", lambda url, headers, proxy: (proxy, latencies[proxy])
+    )
+
+    assert main._score_proxies("example.com", {}, list(latencies), None) == [
+        "HTTP1.1.1.1:1",
+        "HTTP2.2.2.2:2",
+    ]
+
+
 def test_score_proxies_survives_an_unexpected_worker_failure(monkeypatch):
     def explode(url, headers, proxy):
         if proxy == "HTTP2.2.2.2:2":
@@ -227,10 +239,37 @@ def test_fetch_proxy_ignores_non_http_sources():
     assert main._fetch_proxy("ftp://source.test/list", "HTTP") == (set(), 0)
 
 
+def test_fetch_from_urls_returns_sorted_unique_proxies(fake_sources):
+    fake_sources(
+        {
+            "http://source.test/a": "3.3.3.3:80\n1.1.1.1:80\n",
+            "http://source.test/b": "2.2.2.2:80\n1.1.1.1:80\n",
+        }
+    )
+
+    proxies = main._fetch_from_urls(
+        ["http://source.test/a", "http://source.test/b"], "HTTP"
+    )
+
+    assert proxies == ["HTTP1.1.1.1:80", "HTTP2.2.2.2:80", "HTTP3.3.3.3:80"]
+
+
 def test_cli_rejects_filename_together_with_output_dir():
     result = CliRunner().invoke(main.main, ["all", "-F", "x.txt", "-O", "out"])
     assert result.exit_code == 2
     assert "not both" in result.output
+
+
+@pytest.mark.parametrize("value", ["0", "-1"])
+def test_cli_rejects_non_positive_limit(value):
+    result = CliRunner().invoke(main.main, ["example.com", "--limit", value])
+    assert result.exit_code == 2
+
+
+def test_cli_rejects_limit_without_a_target():
+    result = CliRunner().invoke(main.main, ["all", "--limit", "5"])
+    assert result.exit_code == 2
+    assert "--limit requires a target URL" in result.output
 
 
 def test_cli_errors_when_no_source_yields_a_proxy(monkeypatch):

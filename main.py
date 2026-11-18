@@ -264,7 +264,12 @@ def _parse_headers(headers: tuple[str, ...]) -> dict[str, str]:
     callback=_parse_prefixes,
     help="Add prefix to proxy lines (format: PROTOCOL=prefix).",
 )
-@click.option("--limit", "-L", type=int, help="Limit working proxy return.")
+@click.option(
+    "--limit",
+    "-L",
+    type=click.IntRange(min=1),
+    help="Keep the N fastest working proxies (min 1, requires a target URL).",
+)
 @click.option(
     "--output-dir",
     "-O",
@@ -290,11 +295,14 @@ def main(
         headers: Custom request headers.
         protocol: "HTTP", "SOCKS4", "SOCKS5" or "None" (all protocols).
         add_prefix: Mapping of protocol to prefix string.
-        limit: Maximum number of fastest working proxies to keep.
+        limit: Maximum number of fastest working proxies to keep. Requires a
+            target URL other than "all".
         output_dir: Directory to receive all.txt plus one file per protocol.
     """
     if filename is not None and output_dir is not None:
         raise click.UsageError("Pass either --filename or --output-dir, not both.")
+    if limit is not None and url == "all":
+        raise click.UsageError("--limit requires a target URL, not 'all'.")
 
     header_dict = _parse_headers(headers)
     add_prefix = add_prefix or {}
@@ -356,7 +364,8 @@ def _fetch_from_urls(urls: list[str], proto_id: str) -> list[str]:
         proto_id: Proxy type identifier (e.g. "HTTP").
 
     Returns:
-        De-duplicated list of raw proxy strings.
+        De-duplicated proxy strings in sorted order, so repeated runs over the
+        same sources write byte-identical files.
     """
     proxies: set[str] = set()
     rejected = 0
@@ -381,7 +390,7 @@ def _fetch_from_urls(urls: list[str], proto_id: str) -> list[str]:
                 f"Fetching {proto_id} proxies "
                 f"| Total: {len(proxies):,} | Malformed: {rejected:,}"
             )
-    return list(proxies)
+    return sorted(proxies)
 
 
 def _fetch_proxy(url: str, proto_id: str) -> tuple[set[str], int]:
@@ -463,8 +472,9 @@ def _score_proxies(
                         f"| Limit: {'♾️' if limit is None else limit}"
                     )
     # Rank every survivor before truncating, otherwise limit keeps whichever
-    # proxies happened to answer first rather than the fastest ones.
-    results.sort(key=lambda item: item[1])
+    # proxies happened to answer first rather than the fastest ones. Ties break
+    # by proxy string so equal latencies still produce a stable order.
+    results.sort(key=lambda item: (item[1], item[0]))
     if limit is not None:
         results = results[:limit]
     return [proxy for proxy, _ in results]
